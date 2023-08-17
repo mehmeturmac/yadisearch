@@ -1,4 +1,3 @@
-'use client';
 import React from 'react';
 import { IDisk, Iitem, MainContextType } from './@types.main';
 
@@ -11,7 +10,7 @@ export const MainProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [disks, setDisks] = React.useState<IDisk[]>(localData || []);
   const [items, setItems] = React.useState<Iitem[]>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
-  const [filteredItems, setFilteredItems] = React.useState<Iitem[]>(items);
+  // const [filteredItems, setFilteredItems] = React.useState<Iitem[]>(items);
 
   const saveDisk = (disk: IDisk) => setDisks([...disks, disk]);
 
@@ -24,6 +23,8 @@ export const MainProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem('yadisearch', JSON.stringify(disks));
   }, [disks]);
 
+  const saveItem = (item: Iitem) => setItems([...items, item]);
+
   // const filterItems = (search: string) => {
   //   const filter = items.filter((item) => item.name.includes(search));
   //   setFilteredItems(filter);
@@ -35,6 +36,7 @@ export const MainProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loading,
     saveDisk,
     removeDisk,
+    saveItem,
   };
 
   return <MainContext.Provider value={values}>{children}</MainContext.Provider>;

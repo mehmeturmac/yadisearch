@@ -18,4 +18,5 @@ export type MainContextType = {
   loading: boolean;
   saveDisk: (disk: IDisk) => void;
   removeDisk: (public_url: string) => void;
+  saveItem: (item: Iitem) => void;
 };

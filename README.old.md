@@ -1,2 +1,0 @@
-# yadisearch
-Yandex Disk Search
