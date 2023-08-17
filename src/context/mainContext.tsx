@@ -10,9 +10,9 @@ export const MainProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [disks, setDisks] = React.useState<IDisk[]>(localData || []);
   const [items, setItems] = React.useState<Iitem[]>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
-  // const [filteredItems, setFilteredItems] = React.useState<Iitem[]>(items);
+  const [filteredItems, setFilteredItems] = React.useState<Iitem[]>(items);
 
-  const saveDisk = (disk: IDisk) => setDisks([...disks, disk]);
+  const saveDisk = (disk: IDisk) => setDisks((disks) => [...disks, disk]);
 
   const removeDisk = (public_url: string) => {
     const newDisks = disks.filter((disk) => disk.public_url !== public_url);
@@ -23,12 +23,12 @@ export const MainProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem('yadisearch', JSON.stringify(disks));
   }, [disks]);
 
-  const saveItem = (item: Iitem) => setItems([...items, item]);
+  const saveItem = (item: Iitem) => setItems((items) => [...items, item]);
 
-  // const filterItems = (search: string) => {
-  //   const filter = items.filter((item) => item.name.includes(search));
-  //   setFilteredItems(filter);
-  // };
+  const filterItems = (search: string) => {
+    const filter = items.filter((item) => item.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()));
+    setFilteredItems(filter);
+  };
 
   const values = {
     disks,
@@ -36,6 +36,8 @@ export const MainProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loading,
     saveDisk,
     removeDisk,
+    filteredItems,
+    filterItems,
     saveItem,
   };
 
