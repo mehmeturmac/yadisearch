@@ -1,0 +1,35 @@
+.searchBox {
+  width: 50%;
+  margin: auto;
+  padding: 10px;
+  display: flex;
+}
+
+.search {
+  border-radius: 40px 0 0 40px;
+  padding: 10px 30px;
+  width: 300px;
+  border: none;
+  transition: width 1s;
+}
+
+.search:focus {
+  outline: none;
+}
+
+.searchButton {
+  background-color: #62d2a2;
+  color: #fff;
+  border-radius: 0 40px 40px 0;
+  padding: 10px;
+  width: 20px;
+  display: flex;
+  font-size: large;
+}
+
+@media screen and (max-width: 1200px) {
+  .searchBox {
+    width: 80%;
+    transition: width 1s;
+  }
+}

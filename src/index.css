@@ -2,3 +2,7 @@
   margin: 0;
   padding: 0;
 }
+
+body {
+  background: linear-gradient(180deg, #bbe1fa -30.56%, rgba(232, 236, 255, 0) 135.85%);
+}

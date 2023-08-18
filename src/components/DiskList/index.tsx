@@ -20,15 +20,15 @@ function DiskList() {
     const link = event.target.link.value;
     const linkDisk = await checkDisk(encodeURI(link));
     if (linkDisk === null) {
-      alert('Link boş veya hatalı! Lütfen "Yandex Disk" linki girin!');
+      alert('Link Error! It must be a "Yandex Disk" link!');
     } else {
       const { public_url, name, _embedded, type } = linkDisk;
       if (type !== 'dir') {
-        alert('Sadece klasör linkleri kabul edilmektedir!');
+        alert('Only folder links are accepted!');
       } else if (_embedded.total === 0) {
-        alert('Klasör boş!');
+        alert('Empty folder!');
       } else if (disks.some((disk) => disk.public_url === public_url)) {
-        alert('Link daha önce eklenmiş!');
+        alert('Link already added!');
       } else {
         saveDisk({ public_url, name, status: 'notscanned' });
         event.target.reset();
@@ -44,7 +44,7 @@ function DiskList() {
           <AiOutlinePlusCircle />
         </button>
       </form>
-      <div className={styles.diskList}>{disks.length > 0 ? disks.map((disk, i) => <DiskCard key={i} disk={disk} />) : <span className={styles.diskCard}>Empty</span>}</div>
+      <div className={styles.diskList}>{disks.length > 0 ? disks.map((disk, i) => <DiskCard key={i} disk={disk} />) : <div style={{ textAlign: 'center' }}>Empty</div>}</div>
       <div className={styles.diskAdd}>
         <span className={styles.scanAllBtn}>
           <AiOutlineFileSearch /> Scan All

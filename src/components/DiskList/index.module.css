@@ -1,51 +1,77 @@
 .diskContainer {
   width: 25%;
-  height: 85vh;
+  height: initial;
   max-width: 300px;
-  margin-left: 20px;
+  margin-left: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.diskAdd {
+  width: 100%;
+  display: flex;
+}
+
+.addLink {
+  border: none;
+  border-radius: 40px 0 0 40px;
+  padding: 8px 20px;
+  width: 100%;
+}
+
+.addLink:focus {
+  outline: none;
+}
+
+.addBtn {
+  border: none;
+  border-radius: 0 40px 40px 0;
+  padding: 8px 12px;
+  display: flex;
+  justify-content: center;
+  font-size: large;
+  background-color: #62d2a2;
+  color: #fff;
 }
 
 .diskList {
-  /* background-color: #91c8e4; */
-  background: linear-gradient(180deg, #91c8e4 -30.56%, rgba(232, 236, 255, 0) 135.85%);
-  border-radius: 6px;
   width: 100%;
-  height: 80vh;
-  padding: 5px 0;
+  height: 100%;
+  margin: 20px 0;
   overflow: auto;
 }
 
 .diskCard {
-  background-color: gainsboro;
-  margin: 5px;
+  background-color: #e4f9f5;
+  margin: 5px 0;
+  height: 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-radius: 6px;
-  position: relative;
   overflow: hidden;
 }
 
 .diskName {
   width: 100%;
-  height: 20px;
+  padding: 8px;
   font-size: large;
   text-align: center;
-  padding: 5px;
   overflow: hidden;
 }
 
 .Btn {
   width: 20px;
   color: white;
+  font-size: large;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 7px;
+  padding: 12px;
 }
 
 .scanBtn {
-  background-color: green;
+  background-color: #62d2a2;
   animation: 0.4s slide-right;
 }
 
@@ -72,41 +98,15 @@
   }
 }
 
-.diskAdd {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 5vh;
-}
-
-.addBtn {
-  background-color: green;
-  color: white;
-  border: 1px solid black;
-  border-radius: 6px;
-  padding: 6.5px;
-  margin: 2px;
-}
-
-.addLink {
-  width: 100%;
-  border: 1px solid black;
-  border-radius: 6px;
-  padding: 7px;
-  margin: 2px;
-}
-
 .scanAllBtn {
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #1a5d1a;
+  background-color: #62d2a2;
+  font-size: large;
   color: white;
-  padding: 10px;
-  margin-top: 7px;
-  border: 1px solid black;
+  padding: 10px 0;
   border-radius: 6px;
 }
 
@@ -115,9 +115,17 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: large;
   background-color: #f4d160;
-  padding: 10px;
-  margin: 7px 0 0 7px;
-  border: 1px solid black;
+  padding: 0 10px;
+  margin-left: 10px;
   border-radius: 6px;
+}
+
+@media screen and (max-width: 1200px) {
+  .diskContainer {
+    width: 95%;
+    max-width: none;
+    margin: 20px 0;
+  }
 }
