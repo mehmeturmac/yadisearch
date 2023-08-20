@@ -5,9 +5,14 @@ import App from './App';
 // ContextAPI
 import { MainProvider } from './context/mainContext';
 
+// ChakraUi
+import { ChakraProvider } from '@chakra-ui/react';
+
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <MainProvider>
-    <App />
+    <ChakraProvider toastOptions={{ defaultOptions: { position: 'top-right', duration: 3000 } }}>
+      <App />
+    </ChakraProvider>
   </MainProvider>
 );

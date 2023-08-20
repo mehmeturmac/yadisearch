@@ -1,39 +1,62 @@
 import React from 'react';
 import styles from './index.module.css';
-import { checkDisk } from '../../hooks';
+import { diskHealth } from '../../hooks';
 
 // Context
 import { MainContext } from '../../context/mainContext';
 import { MainContextType } from '../../context/@types.main';
 
 // Icons
-import { AiOutlinePlusCircle, AiFillCheckCircle, AiOutlineFileSearch } from 'react-icons/ai';
+import { AddIcon, RepeatIcon, CheckIcon } from '@chakra-ui/icons';
+
+// Toast
+import { useToast } from '@chakra-ui/react';
 
 // Card
 import DiskCard from './DiskCard';
 
 function DiskList() {
-  const { disks, saveDisk } = React.useContext(MainContext) as MainContextType;
+  const { disks, addDisk, updateDisk, diskScanning } = React.useContext(MainContext) as MainContextType;
+
+  const toast = useToast();
 
   const formSubmit = async (event: any) => {
     event.preventDefault();
+    if (diskScanning) {
+      toast({ title: 'Wait for the disk scan to finish!', status: 'warning' });
+      return;
+    }
     const link = event.target.link.value;
-    const linkDisk = await checkDisk(encodeURI(link));
+    const linkDisk = await diskHealth(encodeURI(link));
     if (linkDisk === null) {
-      alert('Link Error! It must be a "Yandex Disk" link!');
+      toast({ title: 'Link Error! It must be a "Yandex Disk" link!', status: 'error' });
     } else {
       const { public_url, name, _embedded, type } = linkDisk;
       if (type !== 'dir') {
-        alert('Only folder links are accepted!');
+        toast({ title: 'Only folder links are accepted!', status: 'error' });
       } else if (_embedded.total === 0) {
-        alert('Empty folder!');
+        toast({ title: 'Empty folder!', status: 'error' });
       } else if (disks.some((disk) => disk.public_url === public_url)) {
-        alert('Link already added!');
+        toast({ title: 'Link already added!', status: 'error' });
       } else {
-        saveDisk({ public_url, name, status: 'notscanned' });
-        event.target.reset();
+        addDisk({ public_url, name, status: 'notscanned' });
+        toast({ title: 'Link added!', status: 'success' });
       }
     }
+    event.target.reset();
+  };
+
+  const checkAllDisks = async () => {
+    disks.map(async (disk) => {
+      const diskStatus = disk.status;
+      updateDisk(Number(disk.id), 'scanning');
+      const check = await diskHealth(encodeURI(disk.public_url));
+      if (check === null || check.type !== 'dir' || check._embedded.total === 0) {
+        updateDisk(Number(disk.id), 'dead');
+      } else {
+        updateDisk(Number(disk.id), diskStatus);
+      }
+    });
   };
 
   return (
@@ -41,16 +64,16 @@ function DiskList() {
       <form onSubmit={formSubmit} className={styles.diskAdd}>
         <input type="text" placeholder="Link" name="link" className={styles.addLink} />
         <button type="submit" className={styles.addBtn}>
-          <AiOutlinePlusCircle />
+          <AddIcon />
         </button>
       </form>
-      <div className={styles.diskList}>{disks.length > 0 ? disks.map((disk, i) => <DiskCard key={i} disk={disk} />) : <div style={{ textAlign: 'center' }}>Empty</div>}</div>
+      <div className={styles.diskList}>{disks.length > 0 ? disks.map((disk) => <DiskCard key={disk.id} disk={disk} />) : <div style={{ textAlign: 'center' }}>Empty</div>}</div>
       <div className={styles.diskAdd}>
         <span className={styles.scanAllBtn}>
-          <AiOutlineFileSearch /> Scan All
+          <RepeatIcon /> Scan All
         </span>
-        <span className={styles.checkAllBtn}>
-          <AiFillCheckCircle />
+        <span className={styles.checkAllBtn} onClick={checkAllDisks}>
+          <CheckIcon />
         </span>
       </div>
     </div>

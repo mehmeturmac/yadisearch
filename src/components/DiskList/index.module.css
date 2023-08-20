@@ -26,7 +26,8 @@
 .addBtn {
   border: none;
   border-radius: 0 40px 40px 0;
-  padding: 8px 12px;
+  padding: 8px;
+  width: 40px;
   display: flex;
   justify-content: center;
   font-size: large;
@@ -43,13 +44,18 @@
 
 .diskCard {
   background-color: #e4f9f5;
-  margin: 5px 0;
+  margin: 5px;
   height: 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-radius: 6px;
   overflow: hidden;
+}
+
+.diskCard:hover {
+  margin: 5px 0;
+  transition: margin 0.3s;
 }
 
 .diskName {
@@ -61,7 +67,7 @@
 }
 
 .Btn {
-  width: 20px;
+  width: 40px;
   color: white;
   font-size: large;
   display: flex;
@@ -72,12 +78,12 @@
 
 .scanBtn {
   background-color: #62d2a2;
-  animation: 0.4s slide-right;
+  animation: 0.25s slide-right;
 }
 
 .removeBtn {
   background-color: red;
-  animation: 0.4s slide-left;
+  animation: 0.25s slide-left;
 }
 
 @keyframes slide-right {
@@ -111,7 +117,7 @@
 }
 
 .checkAllBtn {
-  width: 30px;
+  width: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -120,6 +126,13 @@
   padding: 0 10px;
   margin-left: 10px;
   border-radius: 6px;
+}
+
+.scanLoading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  white-space: pre;
 }
 
 @media screen and (max-width: 1200px) {
