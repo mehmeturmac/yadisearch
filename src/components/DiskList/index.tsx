@@ -6,28 +6,27 @@ import { diskHealth } from '../../hooks';
 import { MainContext } from '../../context/mainContext';
 import { MainContextType } from '../../context/@types.main';
 
-// Icons
-import { AddIcon, RepeatIcon, CheckIcon } from '@chakra-ui/icons';
+import { diskScan } from '../../hooks/diskScan';
 
-// Toast
-import { useToast } from '@chakra-ui/react';
+// Icons and chakra-ui
+import { AddIcon, RepeatIcon, CheckIcon } from '@chakra-ui/icons';
+import { useToast, Tooltip, Spinner } from '@chakra-ui/react';
 
 // Card
 import DiskCard from './DiskCard';
 
 function DiskList() {
-  const { disks, addDisk, updateDisk, diskScanning } = React.useContext(MainContext) as MainContextType;
+  const { disks, addDisk, updateDisk, diskScanning, setDiskScanning, addItems } = React.useContext(MainContext) as MainContextType;
 
   const toast = useToast();
 
-  const formSubmit = async (event: any) => {
+  const addLink = async (event: any) => {
     event.preventDefault();
     if (diskScanning) {
       toast({ title: 'Wait for the disk scan to finish!', status: 'warning' });
       return;
     }
-    const link = event.target.link.value;
-    const linkDisk = await diskHealth(encodeURI(link));
+    const linkDisk = await diskHealth(encodeURI(event.target.link.value));
     if (linkDisk === null) {
       toast({ title: 'Link Error! It must be a "Yandex Disk" link!', status: 'error' });
     } else {
@@ -47,7 +46,8 @@ function DiskList() {
   };
 
   const checkAllDisks = async () => {
-    disks.map(async (disk) => {
+    toast({ title: 'Disks are checking...', status: 'loading' });
+    for (const disk of disks) {
       const diskStatus = disk.status;
       updateDisk(Number(disk.id), 'scanning');
       const check = await diskHealth(encodeURI(disk.public_url));
@@ -56,25 +56,52 @@ function DiskList() {
       } else {
         updateDisk(Number(disk.id), diskStatus);
       }
-    });
+    }
+    toast.closeAll();
+    toast({ title: 'Disks are checked!', status: 'success' });
+  };
+
+  const scanAll = async () => {
+    await checkAllDisks();
+    toast({ title: 'All disks are scanning...', status: 'loading' });
+    setDiskScanning(true);
+    for (const disk of disks) {
+      if (disk.status === 'notscanned') {
+        updateDisk(Number(disk.id), 'scanning');
+        addItems(await diskScan(disk));
+        updateDisk(Number(disk.id), 'scanned');
+      }
+    }
+    setDiskScanning(false);
+    toast.closeAll();
+    toast({ title: 'All disks are scanned!', status: 'success' });
   };
 
   return (
     <div className={styles.diskContainer}>
-      <form onSubmit={formSubmit} className={styles.diskAdd}>
-        <input type="text" placeholder="Link" name="link" className={styles.addLink} />
-        <button type="submit" className={styles.addBtn}>
-          <AddIcon />
-        </button>
+      <form onSubmit={addLink} className={styles.diskAdd}>
+        <Tooltip label="Enter a yandex disk link!" placement="bottom" openDelay={500} closeOnClick hasArrow>
+          <input type="text" placeholder="Link" name="link" className={styles.addLink} />
+        </Tooltip>
+        <Tooltip label="Add" placement="right" openDelay={500} hasArrow>
+          <button type="submit" className={styles.addBtn}>
+            <AddIcon />
+          </button>
+        </Tooltip>
       </form>
       <div className={styles.diskList}>{disks.length > 0 ? disks.map((disk) => <DiskCard key={disk.id} disk={disk} />) : <div style={{ textAlign: 'center' }}>Empty</div>}</div>
-      <div className={styles.diskAdd}>
-        <span className={styles.scanAllBtn}>
-          <RepeatIcon /> Scan All
-        </span>
-        <span className={styles.checkAllBtn} onClick={checkAllDisks}>
-          <CheckIcon />
-        </span>
+      <div className={styles.buttonGroup}>
+        <Tooltip label="Scan all disks!" placement="top" openDelay={500} closeOnClick hasArrow>
+          <button className={styles.scanAllBtn} disabled={diskScanning} onClick={scanAll}>
+            {diskScanning ? <Spinner size="sm" /> : <RepeatIcon />}
+            {diskScanning ? <> Scanning... </> : <> Scan All </>}
+          </button>
+        </Tooltip>
+        <Tooltip label="Check all disks links!" placement="top" openDelay={500} closeOnClick hasArrow>
+          <button className={styles.checkAllBtn} disabled={diskScanning} onClick={checkAllDisks}>
+            <CheckIcon />
+          </button>
+        </Tooltip>
       </div>
     </div>
   );

@@ -10,6 +10,12 @@
 .diskAdd {
   width: 100%;
   display: flex;
+  border-radius: 40px;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+.diskAdd:hover {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
 .addLink {
@@ -51,10 +57,11 @@
   align-items: center;
   border-radius: 6px;
   overflow: hidden;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
 
 .diskCard:hover {
-  margin: 5px 0;
+  margin: 5px 1px;
   transition: margin 0.3s;
 }
 
@@ -66,7 +73,8 @@
   overflow: hidden;
 }
 
-.Btn {
+.scanBtn,
+.removeBtn {
   width: 40px;
   color: white;
   font-size: large;
@@ -104,35 +112,47 @@
   }
 }
 
-.scanAllBtn {
-  width: 100%;
+.buttonGroup {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #62d2a2;
-  font-size: large;
-  color: white;
-  padding: 10px 0;
-  border-radius: 6px;
 }
 
+.scanLoading,
+.scanAllBtn,
 .checkAllBtn {
-  width: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: large;
-  background-color: #f4d160;
-  padding: 0 10px;
-  margin-left: 10px;
-  border-radius: 6px;
-}
-
-.scanLoading {
   display: flex;
   justify-content: center;
   align-items: center;
   white-space: pre;
+}
+
+.scanAllBtn,
+.checkAllBtn {
+  font-size: large;
+  padding: 10px;
+  border-radius: 6px;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+.scanAllBtn {
+  width: 100%;
+  background-color: #62d2a2;
+  color: white;
+}
+
+.checkAllBtn {
+  width: 50px;
+  background-color: #f4d160;
+  margin-left: 10px;
+}
+
+.scanAllBtn:hover,
+.checkAllBtn:hover {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.scanAllBtn:disabled,
+.checkAllBtn:disabled {
+  cursor: not-allowed;
+  opacity: 0.8;
 }
 
 @media screen and (max-width: 1200px) {
