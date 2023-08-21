@@ -8,6 +8,7 @@
   border-radius: 40px;
   display: flex;
   box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  position: relative;
 }
 
 .searchBox:hover {
@@ -34,6 +35,13 @@
   width: 40px;
   display: flex;
   font-size: large;
+}
+
+.removeButton {
+  position: absolute;
+  top: 8px;
+  right: 50px;
+  color: #9aa0a6;
 }
 
 @media screen and (max-width: 1200px) {

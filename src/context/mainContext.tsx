@@ -39,7 +39,7 @@ export const MainProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   React.useEffect(() => {
     if (filter.length > 2) {
-      const filtered = items.filter((item) => item.name.toLocaleLowerCase().includes(filter.toLocaleLowerCase()));
+      const filtered = items.filter((item) => filter.split(' ').every((word) => item.name.toLocaleUpperCase(['tr-TR', 'en-US']).includes(word.toLocaleUpperCase(['tr-TR', 'en-US']))));
       setFilteredItems(filtered);
     } else {
       setFilteredItems([]);

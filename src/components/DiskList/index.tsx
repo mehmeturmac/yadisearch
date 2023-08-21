@@ -16,7 +16,7 @@ import { useToast, Tooltip, Spinner } from '@chakra-ui/react';
 import DiskCard from './DiskCard';
 
 function DiskList() {
-  const { disks, addDisk, updateDisk, diskScanning, setDiskScanning } = React.useContext(MainContext) as MainContextType;
+  const { disks, addDisk, updateDisk, diskScanning, setDiskScanning, removeItems } = React.useContext(MainContext) as MainContextType;
 
   const toast = useToast();
 
@@ -68,6 +68,7 @@ function DiskList() {
     for (const disk of disks) {
       if (disk.status === 'notscanned') {
         updateDisk(Number(disk.id), 'scanning');
+        removeItems(Number(disk.id));
         await diskScan(disk);
         updateDisk(Number(disk.id), 'scanned');
       }

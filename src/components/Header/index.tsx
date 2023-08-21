@@ -6,18 +6,25 @@ import { MainContext } from '../../context/mainContext';
 import { MainContextType } from '../../context/@types.main';
 
 // Icons and chakra-ui
-import { SearchIcon } from '@chakra-ui/icons';
+import { SearchIcon, CloseIcon } from '@chakra-ui/icons';
 import { Tooltip } from '@chakra-ui/react';
 
 function Header() {
-  const { changeFilter } = React.useContext(MainContext) as MainContextType;
+  const { changeFilter, filter } = React.useContext(MainContext) as MainContextType;
 
   return (
     <div className={styles.searchContainer}>
       <div className={styles.searchBox}>
         <Tooltip label="Min 3 characters are allowed!" placement="bottom" openDelay={500} closeOnClick hasArrow>
-          <input type="text" className={styles.search} placeholder="Search..." onChange={(e: any) => changeFilter(e.target.value)} />
+          <input type="text" className={styles.search} placeholder="Search..." value={filter} onChange={(e: any) => changeFilter(e.target.value)} />
         </Tooltip>
+        {filter.length > 0 && (
+          <Tooltip label="Clear" placement="bottom" hasArrow>
+            <span className={styles.removeButton} onClick={() => changeFilter('')}>
+              <CloseIcon />
+            </span>
+          </Tooltip>
+        )}
         <span className={styles.searchButton}>
           <SearchIcon />
         </span>

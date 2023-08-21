@@ -8,6 +8,11 @@
   flex-direction: column;
 }
 
+.cellHovered {
+  text-decoration: underline;
+  color: #115bc0 !important;
+}
+
 @media screen and (max-width: 1200px) {
   .dgrid {
     margin: 20px 0;
