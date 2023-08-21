@@ -10,12 +10,14 @@ import { diskScan } from '../../hooks/diskScan';
 
 // Icons and chakra-ui
 import { DeleteIcon, RepeatIcon, CheckIcon, NotAllowedIcon, CopyIcon } from '@chakra-ui/icons';
-import { AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, AlertDialogCloseButton } from '@chakra-ui/react';
+import { AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay } from '@chakra-ui/react';
 import { Spinner, Tooltip, useToast, Button, useDisclosure } from '@chakra-ui/react';
 
 function DiskCard({ disk }: { disk: IDisk }) {
-  const { addItems, updateDisk, removeDisk, diskScanning, setDiskScanning } = React.useContext(MainContext) as MainContextType;
-  const [show, setShow] = React.useState(false);
+  const { updateDisk, removeDisk, diskScanning, setDiskScanning, removeItems } = React.useContext(MainContext) as MainContextType;
+
+  const [show, setShow] = React.useState<boolean>(false);
+  const [alert, setAlert] = React.useState<string>('');
 
   const toast = useToast();
 
@@ -23,10 +25,12 @@ function DiskCard({ disk }: { disk: IDisk }) {
   const cancelRef = React.useRef<HTMLButtonElement>(null);
 
   const scanDisk = async () => {
-    toast({ title: 'Disk scanning...', status: 'loading' });
+    onClose();
+    toast({ title: 'Disk scan started...', status: 'info' });
     setDiskScanning(true);
     updateDisk(Number(disk.id), 'scanning');
-    addItems(await diskScan(disk));
+    removeItems(Number(disk.id));
+    await diskScan(disk);
     updateDisk(Number(disk.id), 'scanned');
     setDiskScanning(false);
     toast.closeAll();
@@ -40,16 +44,28 @@ function DiskCard({ disk }: { disk: IDisk }) {
   };
 
   const deleteDisk = () => {
+    onClose();
     removeDisk(Number(disk.id));
+    removeItems(Number(disk.id));
     toast.closeAll();
-    toast({ title: 'Disk link removed!', status: 'error' });
+    toast({ title: 'Disk removed with items!', status: 'error' });
+  };
+
+  const openAlert = (value: string) => {
+    if (value === 'rescan' && disk.status !== 'scanned') {
+      scanDisk();
+    } else {
+      setAlert(value);
+      onOpen();
+      setTimeout(() => setShow(false), 500);
+    }
   };
 
   return (
     <div className={styles.diskCard} onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)}>
       {show && !diskScanning && (
         <Tooltip label="Scan" placement="left" openDelay={200} hasArrow>
-          <button className={styles.scanBtn} onClick={scanDisk}>
+          <button className={styles.scanBtn} onClick={() => openAlert('rescan')}>
             <RepeatIcon />
           </button>
         </Tooltip>
@@ -71,13 +87,7 @@ function DiskCard({ disk }: { disk: IDisk }) {
 
       {show && !diskScanning && (
         <Tooltip label="Delete" placement="right" openDelay={200} hasArrow>
-          <button
-            className={styles.removeBtn}
-            onClick={() => {
-              onOpen();
-              setTimeout(() => setShow(false), 500);
-            }}
-          >
+          <button className={styles.removeBtn} onClick={() => openAlert('delete')}>
             <DeleteIcon />
           </button>
         </Tooltip>
@@ -88,15 +98,22 @@ function DiskCard({ disk }: { disk: IDisk }) {
         <AlertDialogOverlay />
         <AlertDialogContent>
           <AlertDialogHeader>Are you sure?</AlertDialogHeader>
-          <AlertDialogCloseButton />
-          <AlertDialogBody>Are you sure you want to delete the disk and all disks items?</AlertDialogBody>
+          {alert === 'delete' && <AlertDialogBody>Are you sure you want to delete the disk with all items?</AlertDialogBody>}
+          {alert === 'rescan' && <AlertDialogBody>Do you want to rescan the disk with all items?</AlertDialogBody>}
           <AlertDialogFooter>
             <Button ref={cancelRef} onClick={onClose}>
               No
             </Button>
-            <Button colorScheme="red" ml={3} onClick={deleteDisk}>
-              Yes
-            </Button>
+            {alert === 'delete' && (
+              <Button colorScheme="red" ml={3} onClick={deleteDisk}>
+                Yes
+              </Button>
+            )}
+            {alert === 'rescan' && (
+              <Button colorScheme="green" ml={3} onClick={scanDisk}>
+                Yes
+              </Button>
+            )}
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

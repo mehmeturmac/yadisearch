@@ -4,17 +4,8 @@ import React from 'react';
 import { IDisk, Iitem, MainContextType } from './@types.main';
 
 // Dexie
-import Dexie, { Table } from 'dexie';
 import { useLiveQuery } from 'dexie-react-hooks';
-class MySubClassedDexie extends Dexie {
-  disks!: Table<IDisk>;
-  items!: Table<Iitem>;
-  constructor() {
-    super('yadisearch');
-    this.version(1).stores({ disks: '++id,name,public_url,status', items: '++id,name,type,size,link,virusStatus' });
-  }
-}
-const db = new MySubClassedDexie();
+import { db } from '../db';
 
 export const MainContext = React.createContext<MainContextType | null>(null);
 
@@ -34,14 +25,15 @@ export const MainProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Items
   const [items, setItems] = React.useState<Iitem[]>([]);
 
-  // const allItems = useLiveQuery<Iitem[]>(async () => await db.items.toArray());
+  const allItems = useLiveQuery<Iitem[]>(async () => await db.items.toArray());
 
-  // React.useEffect(() => setItems(allItems !== undefined ? allItems : []), [allItems]);
+  const removeItems = async (id: number) => await db.items.where('diskId').anyOf(id).delete();
 
+  React.useEffect(() => setItems(allItems !== undefined ? allItems : []), [allItems]);
+
+  // Filter
   const [filter, setFilter] = React.useState<string>('');
   const [filteredItems, setFilteredItems] = React.useState<Iitem[]>(items);
-
-  const addItems = (items: Iitem[]) => setItems((prev) => prev.concat(items));
 
   const changeFilter = (filter: string) => setFilter(filter);
 
@@ -62,7 +54,7 @@ export const MainProvider: React.FC<{ children: React.ReactNode }> = ({ children
     removeDisk,
     updateDisk,
     items,
-    addItems,
+    removeItems,
     filter,
     changeFilter,
     filteredItems,

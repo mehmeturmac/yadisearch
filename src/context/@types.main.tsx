@@ -12,6 +12,8 @@ export interface Iitem {
   size: string;
   link: string;
   virusStatus: string;
+  diskId: number;
+  diskName: string;
 }
 
 export type MainContextType = {
@@ -22,7 +24,7 @@ export type MainContextType = {
   removeDisk: (id: number) => void;
   updateDisk: (id: number, status: string) => void;
   items: Iitem[];
-  addItems: (items: Iitem[]) => void;
+  removeItems: (id: number) => void;
   filter: string;
   changeFilter: (filter: string) => void;
   filteredItems: Iitem[];

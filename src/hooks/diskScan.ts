@@ -1,11 +1,10 @@
-import { IDisk, Iitem } from './../context/@types.main';
+import { IDisk } from './../context/@types.main';
 import { getItems } from './getItems';
 import { sizeCalc, typeShort } from '../utils';
 
-const scannedData: Iitem[] = [];
+import { db } from '../db';
 
 export const diskScan = async (disk: IDisk, path = '/') => {
-  if (path === '/') scannedData.length = 0;
   let limit = 100;
   let offset = 0;
   const firstData = await getItems(disk.public_url, path, limit, offset);
@@ -19,11 +18,10 @@ export const diskScan = async (disk: IDisk, path = '/') => {
         } else {
           const newSize = sizeCalc(size);
           const type = typeShort(mime_type);
-          scannedData.push({ link, name, type, size: newSize, virusStatus });
+          db.items.add({ link, name, type, size: newSize, virusStatus, diskId: Number(disk.id), diskName: disk.name });
         }
       })
     );
     offset = offset + limit;
   }
-  return scannedData;
 };
