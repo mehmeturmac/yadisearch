@@ -47,6 +47,7 @@ function DiskList() {
 
   const checkAllDisks = async () => {
     toast({ title: 'Disks are checking...', status: 'loading' });
+    setDiskScanning(true);
     for (const disk of disks) {
       const diskStatus = disk.status;
       updateDisk(Number(disk.id), 'scanning');
@@ -57,6 +58,7 @@ function DiskList() {
         updateDisk(Number(disk.id), diskStatus);
       }
     }
+    setDiskScanning(false);
     toast.closeAll();
     toast({ title: 'Disks are checked!', status: 'success' });
   };
@@ -90,7 +92,9 @@ function DiskList() {
           </button>
         </Tooltip>
       </form>
+
       <div className={styles.diskList}>{disks.length > 0 ? disks.map((disk) => <DiskCard key={disk.id} disk={disk} />) : <div style={{ textAlign: 'center' }}>Empty</div>}</div>
+
       <div className={styles.buttonGroup}>
         <Tooltip label="Scan all disks!" placement="top" openDelay={500} closeOnClick hasArrow>
           <button className={styles.scanAllBtn} disabled={diskScanning} onClick={scanAll}>

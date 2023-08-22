@@ -61,8 +61,19 @@ function DiskCard({ disk }: { disk: IDisk }) {
     }
   };
 
+  const ref = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (disk.status === 'scanning') {
+      ref.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
+  }, [disk.status]);
+
   return (
-    <div className={styles.diskCard} onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)}>
+    <div className={styles.diskCard} onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)} ref={ref}>
       {show && !diskScanning && (
         <Tooltip label="Scan" placement="left" openDelay={200} hasArrow>
           <button className={styles.scanBtn} onClick={() => openAlert('rescan')}>

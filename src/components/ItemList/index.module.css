@@ -1,7 +1,7 @@
 .dgrid {
   background: linear-gradient(180deg, #38969b -30.56%, rgba(232, 236, 255, 0) 135.85%);
   border-radius: 6px;
-  width: 100%;
+  width: 75%;
   height: initial;
   padding: 12px;
   display: flex;
@@ -15,6 +15,7 @@
 
 @media screen and (max-width: 1200px) {
   .dgrid {
+    width: 100%;
     margin: 20px 0;
     height: 50vh;
   }
