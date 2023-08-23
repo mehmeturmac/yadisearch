@@ -6,7 +6,7 @@ import { MainContext } from '../../context/mainContext';
 import { MainContextType, IDisk } from '../../context/@types.main';
 
 // Hooks
-import { diskScan } from '../../hooks/diskScan';
+import { diskScan } from '../../hooks';
 
 // Icons and chakra-ui
 import { DeleteIcon, RepeatIcon, CheckIcon, NotAllowedIcon, CopyIcon } from '@chakra-ui/icons';

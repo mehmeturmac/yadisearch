@@ -1,12 +1,10 @@
 import React from 'react';
 import styles from './index.module.css';
-import { diskHealth } from '../../hooks';
+import { diskHealth, diskScan } from '../../hooks';
 
 // Context
 import { MainContext } from '../../context/mainContext';
 import { MainContextType } from '../../context/@types.main';
-
-import { diskScan } from '../../hooks/diskScan';
 
 // Icons and chakra-ui
 import { AddIcon, RepeatIcon, CheckIcon } from '@chakra-ui/icons';

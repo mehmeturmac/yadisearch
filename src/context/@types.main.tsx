@@ -7,10 +7,11 @@ export interface IDisk {
 
 export interface Iitem {
   id?: number;
+  public_key: string;
+  path: string;
   name: string;
   type: string;
   size: string;
-  link: string;
   virusStatus: string;
   diskId: number;
   diskName: string;

@@ -12,13 +12,13 @@ export const diskScan = async (disk: IDisk, path = '/') => {
     const data = await getItems(disk.public_url, path, limit, offset);
     await Promise.all(
       data.items.map(async (item: any) => {
-        const { file: link, name, mime_type, size, antivirus_status: virusStatus } = item;
+        const { public_key, path, name, mime_type, size, antivirus_status: virusStatus } = item;
         if (item.type === 'dir') {
           await diskScan(disk, item.path);
         } else {
           const newSize = sizeCalc(size);
           const type = typeShort(mime_type);
-          db.items.add({ link, name, type, size: newSize, virusStatus, diskId: Number(disk.id), diskName: disk.name });
+          db.items.add({ public_key, path, name, type, size: newSize, virusStatus, diskId: Number(disk.id), diskName: disk.name });
         }
       })
     );
