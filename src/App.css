@@ -4,13 +4,12 @@
 }
 
 .App {
-  background: linear-gradient(180deg, #bbe1fa -30.56%, rgba(232, 236, 255, 0) 135.85%);
   height: 100vh;
   margin: auto;
 }
 
 .Container {
-  width: 85%;
+  width: 80%;
   height: 90vh;
   margin: auto;
   display: flex;

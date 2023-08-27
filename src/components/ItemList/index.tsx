@@ -6,8 +6,8 @@ import styles from './index.module.css';
 import { MainContext } from '../../context/mainContext';
 import { MainContextType } from '../../context/@types.main';
 
-// Toast
-import { useToast } from '@chakra-ui/react';
+// Chakra-ui
+import { useToast, useColorMode } from '@chakra-ui/react';
 
 // Hooks
 import { download } from '../../hooks';
@@ -30,6 +30,8 @@ export default function ItemList() {
     }
   };
 
+  const { colorMode } = useColorMode();
+
   return (
     <div className={styles.dgrid}>
       <DataGrid
@@ -40,6 +42,7 @@ export default function ItemList() {
         hoverStateEnabled={true}
         onCellClick={downloadItem}
         onCellHoverChanged={cellHover}
+        className={colorMode === 'dark' ? styles.dark : ''}
       >
         <Paging defaultPageSize={20} />
         <Pager showPageSizeSelector={true} allowedPageSizes={[20, 30, 50, 100]} showNavigationButtons={true} visible={true} />

@@ -8,10 +8,12 @@ import Footer from './components/Footer';
 import DiskList from './components/DiskList';
 import ItemList from './components/ItemList';
 
+// Chakra-ui
+import { useColorModeValue, Box } from '@chakra-ui/react';
+
 // Context
 import { MainContext } from './context/mainContext';
 import { MainContextType } from './context/@types.main';
-
 import { db } from './db';
 
 function App() {
@@ -32,15 +34,18 @@ function App() {
     }
   }, [diskScanning]);
 
+  const bgGradient = useColorModeValue('linear(to-b, #bbe1fa, #fff)', 'linear(to-b, #1e1f22, #222)');
+  const color = useColorModeValue('#000', '#fff');
+
   return (
-    <div className="App">
+    <Box className="App" bgGradient={bgGradient} color={color}>
       <Header />
       <div className="Container">
         <ItemList />
         <DiskList />
       </div>
       <Footer />
-    </div>
+    </Box>
   );
 }
 

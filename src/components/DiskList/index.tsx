@@ -53,7 +53,7 @@ function DiskList() {
       if (check === null || check.type !== 'dir' || check._embedded.total === 0) {
         updateDisk(Number(disk.id), 'dead');
       } else {
-        updateDisk(Number(disk.id), diskStatus);
+        diskStatus === 'scanning' ? updateDisk(Number(disk.id), 'notscanned') : updateDisk(Number(disk.id), diskStatus);
       }
     }
     setDiskScanning(false);

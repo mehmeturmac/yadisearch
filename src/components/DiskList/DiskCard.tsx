@@ -11,7 +11,7 @@ import { diskScan } from '../../hooks';
 // Icons and chakra-ui
 import { DeleteIcon, RepeatIcon, CheckIcon, NotAllowedIcon, CopyIcon } from '@chakra-ui/icons';
 import { AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay } from '@chakra-ui/react';
-import { Spinner, Tooltip, useToast, Button, useDisclosure } from '@chakra-ui/react';
+import { Spinner, Tooltip, useToast, Button, useDisclosure, useColorModeValue } from '@chakra-ui/react';
 
 function DiskCard({ disk }: { disk: IDisk }) {
   const { updateDisk, removeDisk, diskScanning, setDiskScanning, removeItems } = React.useContext(MainContext) as MainContextType;
@@ -72,6 +72,8 @@ function DiskCard({ disk }: { disk: IDisk }) {
     }
   }, [disk.status]);
 
+  const color = useColorModeValue('#e4f9f5', '#2f2f2f');
+
   return (
     <div className={styles.diskCard} onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)} ref={ref}>
       {show && !diskScanning && (
@@ -84,7 +86,7 @@ function DiskCard({ disk }: { disk: IDisk }) {
 
       <div
         className={styles.diskName}
-        style={{ backgroundColor: ['#E4F9F5', '#F4D160', '#A8DF8E', '#BB2525'][['notscanned', 'scanning', 'scanned', 'dead'].indexOf(disk.status)] }}
+        style={{ backgroundColor: [color, '#F4D160', '#30bd88', '#BB2525'][['notscanned', 'scanning', 'scanned', 'dead'].indexOf(disk.status)] }}
         onClick={copyClipboard}
       >
         <Tooltip label="Click to copy link!" placement="bottom" openDelay={500} closeOnClick hasArrow>
