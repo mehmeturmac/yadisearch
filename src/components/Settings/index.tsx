@@ -148,7 +148,7 @@ function Settings() {
                   height={200}
                   onChange={(e: any) => setValue(e.target.value)}
                   placeholder="https://yadi.sk/d/...
-                  https://disk.yandex.com/d/..."
+https://disk.yandex.com/d/..."
                   size="xs"
                   color={color}
                 />
@@ -164,6 +164,7 @@ function Settings() {
             )}
             {show === 'export' && (
               <Center flexDirection="column" alignItems="end">
+                <Textarea value={exportDisks()} height={200} readOnly size="xs" color={color} />
                 <Center flexDirection="row" mt={2}>
                   <Button mr={2} onClick={closeModal}>
                     Close
