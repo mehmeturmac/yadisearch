@@ -16,6 +16,7 @@ import {
   useToast,
   Tooltip,
   Button,
+  Image,
   Center,
   Textarea,
   Modal,
@@ -32,6 +33,9 @@ import { AlertBox } from '../AlertBox';
 // Database
 import { db } from '../../db';
 
+// Image
+import helpImage from '../../assets/help.png';
+
 function Settings() {
   const { diskScanning, disks, addDisk } = React.useContext(MainContext) as MainContextType;
 
@@ -44,6 +48,7 @@ function Settings() {
 
   const cancelRef = React.useRef<HTMLButtonElement>(null);
   const { isOpen: modalIsOpen, onOpen: modalOnOpen, onClose: modalOnClose } = useDisclosure();
+  const { isOpen: helpIsOpen, onOpen: helpOnOpen, onClose: helpOnClose } = useDisclosure();
   const { isOpen: itemAlertIsOpen, onOpen: itemAlertOnOpen, onClose: itemAlertOnClose } = useDisclosure();
   const { isOpen: dbAlertIsOpen, onOpen: dbAlertOnOpen, onClose: dbAlertOnClose } = useDisclosure();
 
@@ -103,7 +108,9 @@ function Settings() {
         </Button>
       </Tooltip>
       <Tooltip label="Help" placement="bottom" openDelay={500} closeOnClick hasArrow>
-        <Button m={1}>{<QuestionIcon />}</Button>
+        <Button m={1} onClick={helpOnOpen}>
+          {<QuestionIcon />}
+        </Button>
       </Tooltip>
       <Tooltip label="Settings" placement="bottom" openDelay={500} closeOnClick hasArrow>
         <Button m={1} onClick={modalOnOpen}>
@@ -111,7 +118,7 @@ function Settings() {
         </Button>
       </Tooltip>
 
-      {/* Modal */}
+      {/* Settings Modal */}
       <Modal isOpen={modalIsOpen} onClose={closeModal} size="xs">
         <ModalOverlay />
         <ModalContent>
@@ -141,7 +148,7 @@ function Settings() {
                   height={200}
                   onChange={(e: any) => setValue(e.target.value)}
                   placeholder="https://yadi.sk/d/...
-https://disk.yandex.com/d/..."
+                  https://disk.yandex.com/d/..."
                   size="xs"
                   color={color}
                 />
@@ -157,7 +164,6 @@ https://disk.yandex.com/d/..."
             )}
             {show === 'export' && (
               <Center flexDirection="column" alignItems="end">
-                <Textarea value={exportDisks()} height={200} readOnly size="xs" color={color} />
                 <Center flexDirection="row" mt={2}>
                   <Button mr={2} onClick={closeModal}>
                     Close
@@ -168,6 +174,16 @@ https://disk.yandex.com/d/..."
                 </Center>
               </Center>
             )}
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+
+      {/* Help Modal */}
+      <Modal isOpen={helpIsOpen} onClose={helpOnClose} size="full">
+        <ModalOverlay />
+        <ModalContent alignItems="center" bg="none" onClick={helpOnClose}>
+          <ModalBody alignItems="center" display="flex">
+            <Image src={helpImage} alt="help.png" />
           </ModalBody>
         </ModalContent>
       </Modal>
