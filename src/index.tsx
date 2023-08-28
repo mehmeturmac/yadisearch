@@ -13,7 +13,7 @@ const theme = extendTheme({ initialColorMode: 'light', useSystemColorMode: true 
 
 root.render(
   <MainProvider>
-    <ChakraProvider toastOptions={{ defaultOptions: { position: 'top-right', duration: 3000 } }}>
+    <ChakraProvider toastOptions={{ defaultOptions: { position: 'top-right', duration: 2000 } }}>
       <ColorModeScript initialColorMode={theme.config.initialColorMode} />
       <App />
     </ChakraProvider>

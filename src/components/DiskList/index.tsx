@@ -1,14 +1,19 @@
 import React from 'react';
 import styles from './index.module.css';
-import { diskHealth, diskScan } from '../../hooks';
 
 // Context
 import { MainContext } from '../../context/mainContext';
 import { MainContextType } from '../../context/@types.main';
 
+// Hooks
+import { diskHealth, diskScan } from '../../hooks';
+
 // Icons and chakra-ui
 import { AddIcon, RepeatIcon, CheckIcon } from '@chakra-ui/icons';
-import { useToast, Tooltip, Spinner } from '@chakra-ui/react';
+import { useToast, Tooltip, Spinner, useDisclosure } from '@chakra-ui/react';
+
+// AlertBox
+import { AlertBox } from '../AlertBox';
 
 // Card
 import DiskCard from './DiskCard';
@@ -17,6 +22,9 @@ function DiskList() {
   const { disks, addDisk, updateDisk, diskScanning, setDiskScanning, removeItems } = React.useContext(MainContext) as MainContextType;
 
   const toast = useToast();
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = React.useRef<HTMLButtonElement>(null);
 
   const addLink = async (event: any) => {
     event.preventDefault();
@@ -52,8 +60,10 @@ function DiskList() {
       const check = await diskHealth(encodeURI(disk.public_url));
       if (check === null || check.type !== 'dir' || check._embedded.total === 0) {
         updateDisk(Number(disk.id), 'dead');
+      } else if (diskStatus === 'scanning' || diskStatus === 'dead') {
+        updateDisk(Number(disk.id), 'notscanned');
       } else {
-        diskStatus === 'scanning' ? updateDisk(Number(disk.id), 'notscanned') : updateDisk(Number(disk.id), diskStatus);
+        updateDisk(Number(disk.id), diskStatus);
       }
     }
     setDiskScanning(false);
@@ -95,7 +105,7 @@ function DiskList() {
 
       <div className={styles.buttonGroup}>
         <Tooltip label="Scan all disks!" placement="top" openDelay={500} closeOnClick hasArrow>
-          <button className={styles.scanAllBtn} disabled={diskScanning} onClick={scanAll}>
+          <button className={styles.scanAllBtn} disabled={diskScanning} onClick={onOpen}>
             {diskScanning ? <Spinner size="sm" /> : <RepeatIcon />}
             {diskScanning ? <> Scanning... </> : <> Scan All </>}
           </button>
@@ -106,6 +116,16 @@ function DiskList() {
           </button>
         </Tooltip>
       </div>
+      {/* Alert */}
+      <AlertBox
+        modalRef={cancelRef}
+        onClose={onClose}
+        isOpen={isOpen}
+        onAccept={scanAll}
+        body="Are you sure you want to scan all disks? You can't stop scanning until it's done!"
+        acceptText="Scan All"
+        acceptColor="green"
+      />
     </div>
   );
 }

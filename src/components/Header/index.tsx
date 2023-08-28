@@ -6,14 +6,15 @@ import { MainContext } from '../../context/mainContext';
 import { MainContextType } from '../../context/@types.main';
 
 // Icons and chakra-ui
-import { SearchIcon, CloseIcon, SunIcon, MoonIcon, QuestionIcon, SettingsIcon } from '@chakra-ui/icons';
-import { Tooltip, useColorMode, Button } from '@chakra-ui/react';
+import { SearchIcon, CloseIcon } from '@chakra-ui/icons';
+import { Tooltip } from '@chakra-ui/react';
+
+// Settings
+import Settings from '../Settings';
 
 function Header() {
   const { changeFilter } = React.useContext(MainContext) as MainContextType;
   const [search, setSearch] = React.useState<string>('');
-
-  const { colorMode, toggleColorMode } = useColorMode();
 
   const formSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,15 +39,13 @@ function Header() {
             </span>
           </Tooltip>
         )}
-        <button className={styles.searchButton} type="submit">
-          <SearchIcon />
-        </button>
+        <Tooltip label="Search" placement="bottom" openDelay={500} hasArrow>
+          <button className={styles.searchButton} type="submit">
+            <SearchIcon />
+          </button>
+        </Tooltip>
       </form>
-      <div className={styles.settings}>
-        <Button onClick={toggleColorMode}>{colorMode === 'light' ? <MoonIcon /> : <SunIcon />}</Button>
-        <Button>{<QuestionIcon />}</Button>
-        <Button>{<SettingsIcon />}</Button>
-      </div>
+      <Settings />
     </div>
   );
 }

@@ -10,8 +10,10 @@ import { diskScan } from '../../hooks';
 
 // Icons and chakra-ui
 import { DeleteIcon, RepeatIcon, CheckIcon, NotAllowedIcon, CopyIcon } from '@chakra-ui/icons';
-import { AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay } from '@chakra-ui/react';
-import { Spinner, Tooltip, useToast, Button, useDisclosure, useColorModeValue } from '@chakra-ui/react';
+import { Spinner, Tooltip, useToast, useDisclosure, useColorModeValue } from '@chakra-ui/react';
+
+// AlertBox
+import { AlertBox } from '../AlertBox';
 
 function DiskCard({ disk }: { disk: IDisk }) {
   const { updateDisk, removeDisk, diskScanning, setDiskScanning, removeItems } = React.useContext(MainContext) as MainContextType;
@@ -61,8 +63,8 @@ function DiskCard({ disk }: { disk: IDisk }) {
     }
   };
 
+  // Autoscroll to current scanned disk
   const ref = React.useRef<HTMLDivElement>(null);
-
   React.useEffect(() => {
     if (disk.status === 'scanning') {
       ref.current?.scrollIntoView({
@@ -106,30 +108,13 @@ function DiskCard({ disk }: { disk: IDisk }) {
         </Tooltip>
       )}
 
-      {/* Alert */}
-      <AlertDialog motionPreset="slideInBottom" leastDestructiveRef={cancelRef} onClose={onClose} isOpen={isOpen} isCentered>
-        <AlertDialogOverlay />
-        <AlertDialogContent>
-          <AlertDialogHeader>Are you sure?</AlertDialogHeader>
-          {alert === 'delete' && <AlertDialogBody>Are you sure you want to delete the disk with all items?</AlertDialogBody>}
-          {alert === 'rescan' && <AlertDialogBody>Do you want to rescan the disk with all items?</AlertDialogBody>}
-          <AlertDialogFooter>
-            <Button ref={cancelRef} onClick={onClose}>
-              No
-            </Button>
-            {alert === 'delete' && (
-              <Button colorScheme="red" ml={3} onClick={deleteDisk}>
-                Yes
-              </Button>
-            )}
-            {alert === 'rescan' && (
-              <Button colorScheme="green" ml={3} onClick={scanDisk}>
-                Yes
-              </Button>
-            )}
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      {/* Alerts */}
+      {alert === 'rescan' && (
+        <AlertBox modalRef={cancelRef} onClose={onClose} isOpen={isOpen} onAccept={scanDisk} body="Do you want to rescan the disk with all items?" acceptText="Update" acceptColor="green" />
+      )}
+      {alert === 'delete' && (
+        <AlertBox modalRef={cancelRef} onClose={onClose} isOpen={isOpen} onAccept={deleteDisk} body="Are you sure you want to delete the disk with all items?" acceptText="Delete" />
+      )}
     </div>
   );
 }
