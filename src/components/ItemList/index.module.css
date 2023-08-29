@@ -1,9 +1,9 @@
 .dgrid {
-  background: linear-gradient(180deg, #38969b -30.56%, rgba(232, 236, 255, 0) 135.85%);
+  background: linear-gradient(180deg, #38969b -30%, rgba(232, 236, 255, 0) 135%);
   border-radius: 6px;
   width: 100%;
   height: initial;
-  padding: 12px;
+  padding: 10px 10px 2px 10px;
   display: flex;
   flex-direction: column;
 }

@@ -37,7 +37,7 @@ export default function ItemList() {
       <DataGrid
         dataSource={filter.length > 2 ? filteredItems : items}
         keyExpr={'id'}
-        height="100%"
+        height="calc(100% - 20px)"
         allowColumnResizing={filter.length > 0}
         hoverStateEnabled={true}
         onCellClick={downloadItem}
@@ -53,6 +53,7 @@ export default function ItemList() {
         <Column dataField="size" caption="Size" width={80} alignment="right" allowSorting={filter.length > 0} />
         <Column dataField="virusStatus" caption="Virus Status" width={90} alignment="right" allowSorting={false} />
       </DataGrid>
+      <div className={styles.count}>Total: {items.length > 0 ? items.length : 0}</div>
     </div>
   );
 }

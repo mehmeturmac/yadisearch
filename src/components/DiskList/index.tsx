@@ -18,12 +18,17 @@ import { AlertBox } from '../AlertBox';
 // Card
 import DiskCard from './DiskCard';
 
+import { db } from '../../db';
+
 function DiskList() {
   const { disks, addDisk, updateDisk, diskScanning, setDiskScanning, removeItems } = React.useContext(MainContext) as MainContextType;
+
+  const [onHover, setOnHover] = React.useState<boolean>(false);
 
   const toast = useToast();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: abortIsOpen, onOpen: abortOnOpen, onClose: abortOnClose } = useDisclosure();
   const cancelRef = React.useRef<HTMLButtonElement>(null);
 
   const addLink = async (event: any) => {
@@ -88,6 +93,12 @@ function DiskList() {
     toast({ title: 'All disks are scanned!', status: 'success' });
   };
 
+  const abortScan = async () => {
+    setDiskScanning(false);
+    await db.disks.where({ status: 'scanning' }).modify({ status: 'notscanned' });
+    window.location.reload();
+  };
+
   return (
     <div className={styles.diskContainer}>
       <form onSubmit={addLink} className={styles.diskAdd}>
@@ -101,13 +112,20 @@ function DiskList() {
         </Tooltip>
       </form>
 
+      <div className={styles.count}>Disks{disks.length > 0 && <>({disks.length})</>};</div>
       <div className={styles.diskList}>{disks.length > 0 ? disks.map((disk) => <DiskCard key={disk.id} disk={disk} />) : <div style={{ textAlign: 'center' }}>Empty</div>}</div>
 
       <div className={styles.buttonGroup}>
         <Tooltip label="Scan all disks!" placement="top" openDelay={500} closeOnClick hasArrow>
-          <button className={styles.scanAllBtn} disabled={diskScanning} onClick={onOpen}>
-            {diskScanning ? <Spinner size="sm" /> : <RepeatIcon />}
-            {diskScanning ? <> Scanning... </> : <> Scan All </>}
+          <button
+            className={styles.scanAllBtn}
+            onClick={diskScanning ? abortOnOpen : onOpen}
+            onMouseEnter={() => setOnHover(true)}
+            onMouseLeave={() => setOnHover(false)}
+            style={{ backgroundColor: diskScanning && onHover ? 'red' : '#62d2a2' }}
+          >
+            {diskScanning ? onHover ? '' : <Spinner size="sm" /> : <RepeatIcon />}
+            {diskScanning ? onHover ? <> Abort Scanning </> : <> Scanning </> : <> Scan All </>}
           </button>
         </Tooltip>
         <Tooltip label="Check all disks links!" placement="top" openDelay={500} closeOnClick hasArrow>
@@ -116,16 +134,9 @@ function DiskList() {
           </button>
         </Tooltip>
       </div>
-      {/* Alert */}
-      <AlertBox
-        modalRef={cancelRef}
-        onClose={onClose}
-        isOpen={isOpen}
-        onAccept={scanAll}
-        body="Are you sure you want to scan all disks? You can't stop scanning until it's done!"
-        acceptText="Scan All"
-        acceptColor="green"
-      />
+      {/* Alerts */}
+      <AlertBox modalRef={cancelRef} onClose={onClose} isOpen={isOpen} onAccept={scanAll} body="Are you sure you want to scan all disks?" acceptText="Scan All" acceptColor="green" />
+      <AlertBox modalRef={cancelRef} onClose={abortOnClose} isOpen={abortIsOpen} onAccept={abortScan} body="Are you sure you want to abort?" acceptText="Abort" />
     </div>
   );
 }

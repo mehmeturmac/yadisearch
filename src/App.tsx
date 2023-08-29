@@ -25,11 +25,11 @@ function App() {
       const handleTabClose = (event: any) => {
         event.preventDefault();
         db.disks.where({ status: 'scanning' }).modify({ status: 'notscanned' });
-        return (event.returnValue = 'Are you sure you want to exit?');
+        return 'Are you sure you want to exit?';
       };
-      window.addEventListener('beforeunload', handleTabClose);
+      window.onbeforeunload = handleTabClose;
       return () => {
-        window.removeEventListener('beforeunload', handleTabClose);
+        window.onbeforeunload = null;
       };
     }
   }, [diskScanning]);
