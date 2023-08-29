@@ -20,7 +20,7 @@ export default function ItemList() {
   const downloadItem = (e: any) => {
     if (e.rowType === 'data' && e.column.dataField === 'name') {
       toast({ title: 'Download starting...', status: 'loading', duration: 2000, position: 'top-left' });
-      download(e.data.public_key, e.data.path);
+      download(e.data.public_key, e.data.path, e.data.name);
     }
   };
 
@@ -54,6 +54,7 @@ export default function ItemList() {
         <Column dataField="virusStatus" caption="Virus Status" width={90} alignment="right" allowSorting={false} />
       </DataGrid>
       <div className={styles.count}>Total: {items.length > 0 ? items.length : 0}</div>
+      <iframe name="downloadIframe" id="downloadIframe" title="downloadIframe" style={{ display: 'none' }} />
     </div>
   );
 }
